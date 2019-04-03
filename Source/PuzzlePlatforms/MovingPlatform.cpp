@@ -58,5 +58,9 @@ void AMovingPlatform::AddActiveTrigger()
 
 void AMovingPlatform::RemoveActiveTrigger()
 {
+	if( ActiveTriggers <= 0)
+	{
+		return; 
+	}
 	ActiveTriggers -= 1; 
 }
