@@ -1,30 +1,46 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "PuzzlePlatformsGameInstance.h"
-
+#include "UObject/ConstructorHelpers.h"
 #include "Engine/Engine.h"
+#include "PlatformTrigger.h"
+#include "Blueprint/UserWidget.h"
 
 UPuzzlePlatformsGameInstance::UPuzzlePlatformsGameInstance(const FObjectInitializer &ObjectInitializer)
 {
 	UE_LOG(LogTemp, Warning, TEXT("GameInstance Contructor"));
+	ConstructorHelpers::FClassFinder<UUserWidget> MenuBPClass(TEXT("/Game/MenuSystem/WBP_MainMenu"));
+	if(MenuBPClass.Class != NULL)
+	{
+		MenuClass = MenuBPClass.Class; 
+	}
+	
 }
 
 void UPuzzlePlatformsGameInstance::Init()
 {
-	UE_LOG(LogTemp, Warning, TEXT("GameInstance Init"));
 
+	UE_LOG(LogTemp, Warning, TEXT("Found Class %s"), *MenuClass->GetName());
+
+	UWorld* World = GetWorld();
+	if (World)
+	{
+		World->ServerTravel("/Game/Maps/Menu");
+	}
 }
+
 
 void UPuzzlePlatformsGameInstance::Host()
 {
 	GEngine->AddOnScreenDebugMessage(0, 2.0f, FColor::Green, TEXT("Hosting"));
-	GetWorld()->ServerTravel("/Game/ThirdPersonCPP/Maps/ThirdPersonExampleMap?listen");
 
-// 	UWorld* World = GetWorld();
-// 	if(World)
-// 	{
-// 		World->ServerTravel(""); 
-// 	}
+	UWorld* World = GetWorld();
+	if (World)
+	{
+		World->ServerTravel("/Game/ThirdPersonCPP/Maps/ThirdPersonExampleMap?listen");
+	}
+
+
 }
 
 void UPuzzlePlatformsGameInstance::Join(const FString& Address)
@@ -35,5 +51,28 @@ void UPuzzlePlatformsGameInstance::Join(const FString& Address)
 	if(PlayerController)
 	{
 		PlayerController->ClientTravel(Address, ETravelType::TRAVEL_Absolute); 
+	}
+}
+
+void UPuzzlePlatformsGameInstance::LoadMenu()
+{
+	if (MenuClass)
+	{
+		UUserWidget* Menu = CreateWidget<UUserWidget>(this, MenuClass);
+		if (Menu)
+		{
+			Menu->AddToViewport();
+		}
+		FInputModeUIOnly InputMode;
+
+		InputMode.SetWidgetToFocus(Menu->TakeWidget());
+		InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+
+		APlayerController* PlayerController = GetFirstLocalPlayerController();
+		if (PlayerController)
+		{
+			PlayerController->SetInputMode(InputMode);
+			PlayerController->bShowMouseCursor = true; 
+		}
 	}
 }

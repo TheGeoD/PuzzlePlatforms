@@ -1,0 +1,1 @@
+Loading widgets in Init() function of GameInstance is too early because the viewport will not have been loaded, yet. 
