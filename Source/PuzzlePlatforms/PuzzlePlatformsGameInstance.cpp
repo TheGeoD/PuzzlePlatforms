@@ -39,7 +39,16 @@ void UPuzzlePlatformsGameInstance::Host()
 	{
 		World->ServerTravel("/Game/ThirdPersonCPP/Maps/ThirdPersonExampleMap?listen");
 	}
+	FInputModeGameOnly InputMode;
+	InputMode.SetConsumeCaptureMouseDown(true);
 
+	APlayerController* PlayerController = GetFirstLocalPlayerController();
+	if (PlayerController)
+	{
+		//Changing controls to game controls from UI controls
+		PlayerController->SetInputMode(InputMode);
+		PlayerController->bShowMouseCursor = true;
+	}
 
 }
 
@@ -47,10 +56,16 @@ void UPuzzlePlatformsGameInstance::Join(const FString& Address)
 {
 	GEngine->AddOnScreenDebugMessage(0, 5.0f, FColor::Green, FString::Printf(TEXT("Joining %s"), *Address));
 
+	FInputModeGameOnly InputMode;
+	InputMode.SetConsumeCaptureMouseDown(true);
+
 	APlayerController* PlayerController = GetFirstLocalPlayerController();
-	if(PlayerController)
+	if (PlayerController)
 	{
-		PlayerController->ClientTravel(Address, ETravelType::TRAVEL_Absolute); 
+		PlayerController->ClientTravel(Address, ETravelType::TRAVEL_Absolute);
+		//Changing controls to game controls from UI controls
+		PlayerController->SetInputMode(InputMode);
+		PlayerController->bShowMouseCursor = true;
 	}
 }
 
@@ -72,7 +87,7 @@ void UPuzzlePlatformsGameInstance::LoadMenu()
 		if (PlayerController)
 		{
 			PlayerController->SetInputMode(InputMode);
-			PlayerController->bShowMouseCursor = true; 
+			PlayerController->bShowMouseCursor = true;
 		}
 	}
 }
