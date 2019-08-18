@@ -8,6 +8,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "PuzzlePlatformsGameInstance.h"
 
 //////////////////////////////////////////////////////////////////////////
 // APuzzlePlatformsCharacter
@@ -74,6 +75,8 @@ void APuzzlePlatformsCharacter::SetupPlayerInputComponent(class UInputComponent*
 
 	// VR headset functionality
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &APuzzlePlatformsCharacter::OnResetVR);
+
+	PlayerInputComponent->BindAction("ShowOverlay", IE_Pressed, this, &APuzzlePlatformsCharacter::ShowOverlay);
 }
 
 
@@ -90,6 +93,17 @@ void APuzzlePlatformsCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVec
 void APuzzlePlatformsCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
 {
 		StopJumping();
+}
+
+
+void APuzzlePlatformsCharacter::ShowOverlay()
+{
+	UPuzzlePlatformsGameInstance* CustomGameInstace = Cast<UPuzzlePlatformsGameInstance>(GetGameInstance()); 
+
+	if(CustomGameInstace)
+	{
+		CustomGameInstace->ShowOverlay();
+	}
 }
 
 void APuzzlePlatformsCharacter::TurnAtRate(float Rate)

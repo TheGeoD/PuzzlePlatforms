@@ -1,0 +1,20 @@
+Enabling Steam In Packaged Builds
+
+As of unreal version 4.21, the steps described in the previous and next lecture allow you to connect via Steam old when:
+
+    Playing as "Standalone"
+
+    or launching the game via CMD / Powershell, etc.
+
+It does not work when you package the game for shipping.
+
+The workaround for this is simple. When you package the game,
+
+    Go to the packaged game folder [YourGameName]/Binaries/Win64 (or other platform)
+
+    In this folder create a file called steam_appid.txt. Inside this file just write your app id (480 if you are using the public one for testing)
+
+Now it should work. You can check by opening the executable. The Steam overlay should popup.
+
+
+Thanks Gustavo for pointing this out.

@@ -1,0 +1,10 @@
+Bugs In Steam OSS
+
+You may notice some bugs in the Steam OSS while taking this course. One notable one is that the number of players in a session does not increase. 
+This is normal and actually that functionality doesn't work in modern version of the editor.
+
+To get around this you could:
+
+    Track this information manually and update the session settings with IOnlineSession::UpdateSession.
+
+    Use plugins that help aleviate this issue: Advanced Sessions Plugin or UWorks (some are paid).
